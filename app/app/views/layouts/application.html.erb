@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "RailsForum" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+
+  <div id="floating-alert-box" class="container-fluid">
+  <% flash.each do |level, message| %>
+    <%= content_tag :div, class: flash_class(level) do %>
+      <%= message %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" />
+    <% end -%>
+  <% end -%>
+  </div>
+
+  <nav class="navbar navbar-expand-sm bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">
+        <h3>RailsForum</h3>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Member</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Courses</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Blog</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Event</a>
+          </li>
+        </ul>
+        <form class="">
+          <% if logged_in? %>
+            Logged in as: <%= link_to current_user.username, user_path(current_user.id) %>
+            <%= link_to 'Logout', '/logout',   class: 'btn btn-outline-success' %>
+          <% else %>
+            <%= link_to 'Login', '/login',     class: 'btn btn-outline-primary mr-2' %>
+            <%= link_to 'Join',  '/users/new', class: 'btn btn-outline-success' %>
+          <% end %>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <!-- sidebar + content -->
+  <div class="container-fluid">
+  <div class="row">
+
+    <div class="sidebar">
+    <nav class="nav nav-sidebar">
+      <ul class="list-unstyled">
+        <li class="mb-1">
+          <li><a class="nav-link" href="/">Home</a></li>
+          <li><a class="nav-link" href="/topics/recent">Fresh meat</a></li>
+          <li><a class="nav-link" href="/topics/top">Top picks</a></li>
+        </li>
+        <li class="mb-1">
+          <button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#recent-collapse" aria-expanded="true" aria-controls="recent-collapse">
+            Recently Visited
+          </button>
+          <div class="collapse show" id="recent-collapse">
+          <ul class="btn-toggle-nav list-unstyled small">
+            <li>Recent1</li>
+            <li>Recent2</li>
+            <li>Recent3</li>
+          </ul>
+          </div>
+        </li>
+      </ul>
+    </nav>
+    </div>
+
+    <!-- main content body -->
+    <div class="col-sm-12 main">
+      <%= yield %>
+    </div>
+
+  </div><!-- row -->
+  </div><!-- container -->
+  </body>
+</html>

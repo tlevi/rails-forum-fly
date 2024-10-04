@@ -1,0 +1,6 @@
+class Users < ActiveRecord::Migration[7.2]
+  def change
+    add_column :users, :role, :string
+    rename_column :users, :password, :password_digest
+  end
+end

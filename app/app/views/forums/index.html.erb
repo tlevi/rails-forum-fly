@@ -1,0 +1,17 @@
+<h1>Forum index</h1>
+
+<% if is_admin? %>
+<%= link_to 'Create forum', new_forum_path %>
+<% end %>
+<ul>
+<% unless @forums.present? %>
+No forums created yet!
+<% else %>
+  <% @forums.each do |forum| %>
+    <div>
+      <strong><%= forum.title %></p>
+      <p><%= forum.description %></p>
+    </div>
+  <% end %>
+<% end %>
+</ul>

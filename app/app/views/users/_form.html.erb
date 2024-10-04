@@ -1,0 +1,28 @@
+<%= form_with model: user do |f| %>
+  <div>
+  <%= f.label :username %>
+  <%= f.text_field :username %><br>
+  <% user.errors.full_messages_for(:username).each do |message| %>
+  <div><%= message %></div>
+  <% end %>
+  </div>
+
+  <div>
+  <%= f.label :password %>
+  <%= f.password_field :password %><br>
+  <% user.errors.full_messages_for(:password).each do |message| %>
+  <div><%= message %></div>
+  <% end %>
+  </div>
+  <div>
+  <%= f.label :password_confirm %>
+  <%= f.password_field :password_confirm %><br>
+  <% user.errors.full_messages_for(:password_confirm).each do |message| %>
+  <div><%= message %></div>
+  <% end %>
+  </div>
+
+  <div>
+  <%= f.submit "Create Account" %>
+  </div>
+<% end %>

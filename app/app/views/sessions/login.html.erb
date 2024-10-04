@@ -1,0 +1,19 @@
+<h2>Log In</h2>
+
+<div>
+<%= form_tag '/login' do %>
+  Username: <%= text_field_tag :username %><br>
+  Password: <%= password_field_tag :password %><br>
+  <%= submit_tag "Log In" %>
+<% end %>
+</div>
+
+<div class="alert alert-info">
+<h4 class="alert-heading">Hint!</h4>
+<p>Some top secret credentials for testing:</p>
+<ul>
+<li>admin / admin</li>
+<li>moderator / moderator</li>
+<li>user / user</li>
+<ul>
+<div>
