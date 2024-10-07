@@ -1,27 +1,34 @@
 module ApplicationHelper
   def session_user_id
-    session[:user_id]&.nonzero? ? session[:user_id] : 1
+    return session[:user_id]&.nonzero? ? session[:user_id] : 1
   end
 
   def logged_in?
-    session_user_id > 1
+    return session_user_id > 1
   end
 
   def current_user
     @current_user ||= User.find_by_id(session[:user_id])
+    session = [] if @current_user.nil?
+    return @current_user
   end
 
   def is_admin?
-    current_user.role
+    return current_user&.role == 'admin'
+  end
+
+  def is_moderator?
+    return current_user&.role == 'moderator'
   end
 
   def flash_class(level)
     case level
-      when 'notice'  then "alert alert-dismissible fade show alert-server alert-info"
       when 'success' then "alert alert-dismissible fade show alert-server alert-success"
-      when 'error'   then "alert alert-dismissible fade show alert-server alert-danger"
+      when 'notice'  then "alert alert-dismissible fade show alert-server alert-info"
+      when 'info'    then "alert alert-dismissible fade show alert-server alert-info"
       when 'alert'   then "alert alert-dismissible fade show alert-server alert-warning"
-      else raise 'invalid level!'
+      when 'error'   then "alert alert-dismissible fade show alert-server alert-danger"
+      else 'alert alert-dismissible fade show alert-server alert-info'
     end
   end
 end

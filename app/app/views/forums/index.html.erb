@@ -1,17 +1,22 @@
 <h1>Forum index</h1>
 
 <% if is_admin? %>
-<%= link_to 'Create forum', new_forum_path %>
+<p><%= link_to 'Create forum', new_forum_path %></p>
 <% end %>
 <ul>
 <% unless @forums.present? %>
-No forums created yet!
+<p>No forums created yet!</p>
 <% else %>
   <% @forums.each do |forum| %>
-    <div>
-      <strong><%= forum.title %></p>
-      <p><%= forum.description %></p>
+    <a href="<%= forum_path(forum) %>" class="nav-link card-link" data-turbo="false">
+    <div class="card border-secondary">
+      <div class="card-body text-secondary">
+        <div class="card-title"><%= forum.title %></div>
+        <p class="card-text"><%= forum.description %></p>
+        <%= link_to 'Edit', edit_forum_path(forum) if is_admin? %>
+      </div>
     </div>
+    </a>
   <% end %>
 <% end %>
 </ul>

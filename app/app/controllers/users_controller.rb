@@ -22,7 +22,13 @@ class UsersController < ApplicationController
     end
   end
 
+  def index
+    raise # TODO: Restrictions
+    @users = User.all
+  end
+
   def show
+    raise # TODO: Restrictions
     @user = User.find(params.dig(:id))
   end
 

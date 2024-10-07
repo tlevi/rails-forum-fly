@@ -7,3 +7,41 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+
+User.new({
+  username:      'admin',
+  password:      'admin',
+  email:         'admin@example.com',
+  preferredname: 'CoolAdminName',
+  role:          'admin',
+}).save!
+
+User.new({
+  username:      'member',
+  password:      'member',
+  email:         'member@example.com',
+  preferredname: 'CoolMemberName',
+  role:          'member',
+}).save!
+
+User.new({
+  username:      'moderator',
+  password:      'moderator',
+  email:         'moderator@example.com',
+  preferredname: 'CoolModeratorName',
+  role:          'moderator',
+}).save!
+
+Forum.new({
+  title: "Announcements",
+  description: "Important announcements about the site",
+# TODO: Add a "pin" option to forum?
+#  pinned: true,
+}).save!
+
+Forum.new({
+  title: "Welcome",
+  description: "A place to greet new members",
+#  pinned: true,
+}).save!

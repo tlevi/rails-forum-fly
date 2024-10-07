@@ -1,0 +1,5 @@
+<h1><%= @forum.title %></h1>
+<p>
+<%= @forum.description %>
+<%= link_to 'Edit description', edit_forum_path(@forum) if is_admin? %>
+</p>

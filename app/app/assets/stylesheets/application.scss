@@ -15,6 +15,8 @@
  */
 
 @import "bootstrap";
+@import "rails_bootstrap_forms.css";
+
 
 .sidebar {
   position: fixed;
@@ -48,4 +50,14 @@
   position: fixed;
   z-index: 9999;
   margin: 20px;
+}
+
+// TODO: Allow the attachments usage somewhere we want them.
+.trix-button-group--file-tools {
+  display: none !important;
+}
+
+
+.card-link {
+  display: block;
 }

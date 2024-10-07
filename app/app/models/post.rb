@@ -17,6 +17,10 @@
 #  index_posts_on_user_id   (user_id)
 #
 class Post < ApplicationRecord
+  validates :body, presence: true
+  validates :user_id, uniqueness: true, presence: true
+
+  belongs_to :author, class_name: "User", foreign_key: "user_id"
   belongs_to :topic
   belongs_to :forum
 end
