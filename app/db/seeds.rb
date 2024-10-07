@@ -10,6 +10,14 @@
 
 
 User.new({
+  username:      'guest',
+  password:      SecureRandom.alphanumeric(16),
+  email:         '',
+  preferredname: 'Guest',
+  role:          'guest',
+}).save!
+
+User.new({
   username:      'admin',
   password:      'admin',
   email:         'admin@example.com',

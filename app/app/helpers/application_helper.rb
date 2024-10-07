@@ -31,4 +31,12 @@ module ApplicationHelper
       else 'alert alert-dismissible fade show alert-server alert-info'
     end
   end
+
+  def friendly_action_name
+    case action_name
+      when 'new'  then "Create #{controller_name.singularize}"
+      when 'edit' then 'Save changes'
+      else "#{action_name.capitalize} #{controller_name.singularize}"
+    end
+  end
 end

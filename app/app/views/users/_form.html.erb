@@ -23,6 +23,6 @@
   </div>
 
   <div>
-  <%= f.submit "Create Account" %>
+  <%= f.submit (action_name == 'new' ? 'Create account' : 'Save changes') %>
   </div>
 <% end %>

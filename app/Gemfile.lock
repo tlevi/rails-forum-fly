@@ -119,6 +119,8 @@ GEM
       irb (~> 1.10)
       reline (>= 0.3.8)
     drb (2.2.1)
+    dry_crud (7.1.0)
+      rails (>= 7.1)
     erubi (1.13.0)
     execjs (2.9.1)
     ffi (1.17.0-aarch64-linux-gnu)
@@ -357,6 +359,7 @@ DEPENDENCIES
   database_consistency
   database_validations
   debug
+  dry_crud
   image_processing (~> 1.2)
   importmap-rails
   jbuilder

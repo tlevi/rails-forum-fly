@@ -1,5 +1,5 @@
 <%= bootstrap_form_for(forum) do |f| %>
   <%= f.text_field :title %>
   <%= f.rich_text_area(:description) %>
-  <%= f.primary "Create Forum" %>
+  <%= f.primary friendly_action_name %>
 <% end %>

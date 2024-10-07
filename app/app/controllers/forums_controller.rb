@@ -26,9 +26,9 @@ class ForumsController < ApplicationController
   end
 
   def update
-    @user = @current_user
-    if @user.update(user_params)
-      redirect_to @user
+    @forum = Forum.find_by_id!(params.dig(:id))
+    if @forum.update(forum_params)
+      redirect_to @forum
     else
       render :edit, status: :unprocessable_entity
     end

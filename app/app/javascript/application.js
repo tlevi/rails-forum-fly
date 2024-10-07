@@ -18,7 +18,7 @@ window.addEventListener("trix-file-accept", function(event) {
 $(document).ready(function () {
   setTimeout(function () {
     setInterval(function () {
-      $('.alert:first').alert('close');
+      $('.alert-server:first').alert('close');
     }, 2000);
   }, 3000);
 });
