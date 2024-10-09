@@ -8,17 +8,24 @@ module ApplicationHelper
   end
 
   def current_user
-    @current_user ||= User.find_by_id(session[:user_id])
-    session = [] if @current_user.nil?
-    return @current_user
+    @current_user ||= User.find_by_id(session[:user_id]) if session.has_key?(:user_id)
+    @current_user ||= User.find_by_id!(1)
   end
 
-  def is_admin?
-    return current_user&.role == 'admin'
+  def is_guest?
+    !is_member?
+  end
+
+  def is_member?
+    return current_user.role == 'member' || is_moderator?
   end
 
   def is_moderator?
-    return current_user&.role == 'moderator'
+    return current_user.role == 'moderator' || is_admin?
+  end
+
+  def is_admin?
+    return current_user.role == 'admin'
   end
 
   def flash_class(level)

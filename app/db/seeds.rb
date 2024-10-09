@@ -1,55 +1,65 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+# WARNING: Never do this for a REAL app!
+DatabaseCleaner.allow_production = true
+DatabaseCleaner.allow_remote_database_url = true
 
+DatabaseCleaner.clean_with(:truncation)
 
-User.new({
+User.create({
   username:      'guest',
   password:      SecureRandom.alphanumeric(16),
   email:         '',
   preferredname: 'Guest',
   role:          'guest',
-}).save!
+})
 
-User.new({
+admin = User.create({
   username:      'admin',
   password:      'admin',
   email:         'admin@example.com',
   preferredname: 'CoolAdminName',
   role:          'admin',
-}).save!
+})
 
-User.new({
+User.create({
   username:      'member',
   password:      'member',
   email:         'member@example.com',
   preferredname: 'CoolMemberName',
   role:          'member',
-}).save!
+})
 
-User.new({
+User.create({
   username:      'moderator',
   password:      'moderator',
   email:         'moderator@example.com',
   preferredname: 'CoolModeratorName',
   role:          'moderator',
-}).save!
+})
 
-Forum.new({
+forum = Forum.create({
   title: "Announcements",
   description: "Important announcements about the site",
 # TODO: Add a "pin" option to forum?
 #  pinned: true,
-}).save!
+})
 
-Forum.new({
+Forum.create({
   title: "Welcome",
   description: "A place to greet new members",
 #  pinned: true,
-}).save!
+})
+
+ActiveRecord::Base.transaction do
+  post = Post.create({
+    body:    "This is the first post, ever.",
+    author:  admin,
+    forum:   forum,
+  })
+
+  topic = Topic.create({
+    title:      "First post!",
+    forum:      forum,
+    author:     post.author,
+    first_post: post,
+  })
+end

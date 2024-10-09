@@ -1,4 +1,10 @@
 class UsersController < ApplicationController
+  self.action_access_by_role = {
+    guest:     %i[ create new ],
+    member:    %i[ show edit update ],
+    admin:     %i[ index ],
+  }
+
   def new
     @user = User.new
   end
@@ -23,20 +29,29 @@ class UsersController < ApplicationController
   end
 
   def index
-    raise # TODO: Restrictions
+    raise unless is_admin?
     @users = User.all
   end
 
   def show
-    raise # TODO: Restrictions
+    id = params.dig(:id)
+    raise unless is_admin? or current_user.id == id
+
+    @user = current_user
     @user = User.find(params.dig(:id))
   end
 
   def edit
+    id = params.dig(:id)
+    raise unless is_admin? or current_user.id == id
+
     @user = User.find(params[:id])
   end
 
   def update
+    id = params.dig(:id)
+    raise unless is_admin? or current_user.id == id
+
     @user = @current_user
     if @user.update(user_params)
       redirect_to @user

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_06_163808) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_08_165728) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -59,25 +59,26 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_163808) do
   end
 
   create_table "posts", force: :cascade do |t|
-    t.text "body", null: false
     t.bigint "forum_id", null: false
-    t.bigint "topic_id", null: false
+    t.bigint "topic_id"
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["forum_id"], name: "index_posts_on_forum_id"
     t.index ["topic_id"], name: "index_posts_on_topic_id"
-    t.index ["user_id"], name: "index_posts_on_user_id", unique: true
+    t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
   create_table "topics", force: :cascade do |t|
     t.string "title", null: false
     t.bigint "forum_id", null: false
-    t.bigint "post_id"
+    t.bigint "post_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
     t.index ["forum_id"], name: "index_topics_on_forum_id"
     t.index ["post_id"], name: "index_topics_on_post_id"
+    t.index ["user_id"], name: "index_topics_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|

@@ -9,11 +9,9 @@ Rails.application.routes.draw do
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
-
-  get "/forums", to: "forums#index"
-
   resources :users, only: [:new, :create, :edit, :update, :show, :destroy]
 
+  get "/forums", to: "forums#index"
   resources :forums, shallow: true do
     resources :topics
   end

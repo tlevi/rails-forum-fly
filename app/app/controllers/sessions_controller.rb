@@ -17,4 +17,10 @@ class SessionsController < ApplicationController
     reset_session
     redirect_to login_path
   end
+
+  private
+
+  def check_action_by_role(action, role)
+    true
+  end
 end

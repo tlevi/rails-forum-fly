@@ -17,4 +17,8 @@ class Forum < ApplicationRecord
   has_many :posts
 
   scope :visible_to, -> (user) { all }
+
+  def to_s
+    title
+  end
 end

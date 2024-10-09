@@ -8,7 +8,7 @@
 <p>No forums created yet!</p>
 <% else %>
   <% @forums.each do |forum| %>
-    <a href="<%= forum_path(forum) %>" class="nav-link card-link" data-turbo="false">
+    <a href="<%= forum_topics_path(forum) %>" class="nav-link card-link" data-turbo="false">
     <div class="card border-secondary">
       <div class="card-body text-secondary">
         <div class="card-title"><%= forum.title %></div>

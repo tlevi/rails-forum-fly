@@ -1,2 +1,21 @@
-<h1>Topics#index</h1>
-<p>Find me in app/views/topics/index.html.erb</p>
+<h1><%= @forum.title %></h1>
+<p>
+<%= @forum.description %>
+<%= link_to 'Edit description', edit_forum_path(@forum) if is_admin? %>
+<%= link_to 'Post new topic', new_forum_topic_path(@forum) if is_member? %>
+</p>
+<% unless @topics.present? %>
+<p>No topics created yet!</p>
+<% else %>
+  <% @topics.each do |topic| %>
+    <a href="<%= topic_path(topic) %>" class="nav-link card-link" data-turbo="false">
+    <div class="card border-secondary">
+      <div class="card-body text-secondary">
+        <div class="card-title"><%= topic.title %></div>
+        <p class="card-text"><%= topic.first_post.body %></p>
+        <%= link_to 'Edit', edit_topic_path(topic) if is_moderator? %>
+      </div>
+    </div>
+    </a>
+  <% end %>
+<% end %>

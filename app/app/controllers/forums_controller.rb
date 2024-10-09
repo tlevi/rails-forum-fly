@@ -1,4 +1,12 @@
-class ForumsController < ApplicationController
+class ForumsController < CrudController
+  self.permitted_attrs = [:title, :description]
+
+  self.action_access_by_role = {
+    guest:  %i[ index ],
+    member: %i[ show ],
+    admin:  %i[ new create edit update ],
+  }
+
   def new
     @forum = Forum.new
   end
@@ -14,29 +22,16 @@ class ForumsController < ApplicationController
   end
 
   def index
-    @forums = Forum.all
+    @forums = Forum.order(id: :asc)
   end
 
   def show
     @forum = Forum.find(params.dig(:id))
   end
 
-  def edit
-    @forum = Forum.find(params[:id])
-  end
+private
 
-  def update
-    @forum = Forum.find_by_id!(params.dig(:id))
-    if @forum.update(forum_params)
-      redirect_to @forum
-    else
-      render :edit, status: :unprocessable_entity
-    end
-  end
-
-  private
-
-  def forum_params
-    params.require(:forum).permit(:title, :description)
+  def check_action_by_role(action, role)
+    super
   end
 end
