@@ -21,19 +21,16 @@ class Post < ApplicationRecord
 
   validates :body, no_attachments: true
   validates :body, :user_id, presence: true
-  validates :user_id, uniqueness: true
+  validates :topic, :presence => true, :on => :update
 
   # TODO: add some way of showing posted was changed
   #validates :moderated, presence: true
 
   belongs_to :author, class_name: "User", foreign_key: "user_id"
-  belongs_to :topic, inverse_of: :first_post, optional: true
+  belongs_to :topic, inverse_of: :first_post, optional: true, autosave: true, touch: true
   belongs_to :forum
 
-  before_commit do
-    if topic.blank?
-      errors.add :topic, 'a topic must be associated with the post'
-      throw :abort
-    end
+  def is_first?
+    topic.first_post.id == self.id
   end
 end

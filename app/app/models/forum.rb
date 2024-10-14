@@ -13,7 +13,7 @@ class Forum < ApplicationRecord
   validates_length_of :title, length: 4..255, allow_blank: false
   validates :description, no_attachments: true
 
-  has_many :topics
+  has_many :topics, -> { order(updated_at: :desc) }
   has_many :posts
 
   scope :visible_to, -> (user) { all }

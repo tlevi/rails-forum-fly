@@ -1,0 +1,38 @@
+<h3><%= @topic.title %></h3>
+<h4>By <%= @topic.author.username %></h4>
+<p>
+<%= time_ago_in_words(@topic.created_at).capitalize %> ago in <%= @topic.forum.title %>
+</p>
+
+<% @topic.posts.each do |post| %>
+<div class="row">
+  <div class="card-group">
+      <div class="card" style="min-width: 150px; max-width: 150px">
+        <div class="card-body">
+          <h5 class="card-title">
+            <%= post.author.username %>
+          </h5>
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">
+            Joined <%= post.author.created_at.strftime('%b %Y') %>
+          </small>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <%= post.body %>
+        </div>
+        <div class="card-footer text-end">
+          <small class="text-muted">
+            <% if post.updated_at - post.created_at <= 1 %>
+              Posted <%= time_ago_in_words(post.created_at) %> ago
+            <% else %>
+              Edited <%= time_ago_in_words(post.updated_at) %> ago
+            <% end %>
+          </small>
+        </div>
+      </div>
+  </div>
+</div>
+<% end %>

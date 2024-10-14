@@ -22,11 +22,11 @@ class ForumsController < CrudController
   end
 
   def index
-    @forums = Forum.order(id: :asc)
+    @forums = Forum.order(id: :asc).with_rich_text_description
   end
 
   def show
-    @forum = Forum.find(params.dig(:id))
+    redirect_to forum_topics_path(@forum)
   end
 
 private
