@@ -1,9 +1,12 @@
 <h1><%= @forum.title %></h1>
 <p>
 <%= @forum.description %>
+</p>
+<p>
 <%= link_to 'Edit description', edit_forum_path(@forum), class: 'btn btn-primary' if is_admin? %>
 <%= link_to 'Post new topic', new_forum_topic_path(@forum), class: 'btn btn-success' if is_member? %>
 </p>
+<p>
 <% unless @forums.present? %>
 <p>No topics created yet!</p>
 <% else %>
@@ -19,3 +22,4 @@
     </a>
   <% end %>
 <% end %>
+</p>

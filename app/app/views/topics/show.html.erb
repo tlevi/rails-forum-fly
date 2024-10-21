@@ -1,7 +1,6 @@
 <h3><%= @topic.title %></h3>
-<h4>By <%= @topic.author.username %></h4>
 <p>
-<%= time_ago_in_words(@topic.created_at).capitalize %> ago in <%= @topic.forum.title %>
+By <%= @topic.author.username %>, <%= time_ago_in_words(@topic.created_at).capitalize %> ago in <%= @topic.forum.title %>
 </p>
 <p>
 <% @topic.posts.each do |post| %>
