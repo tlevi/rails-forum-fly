@@ -1,0 +1,12 @@
+<p>
+<% if action_name == 'new' %>
+Posting new reply in topic <%= @topic.title %>
+<% else %>
+Updating post in topic <%= @topic.title %>
+<% end %>
+</p>
+
+<%= bootstrap_form_for(@post, url: save_post_path(@topic, @post)) do |f| %>
+  <%= f.rich_text_area(:body) %>
+  <%= f.primary friendly_action_name %>
+<% end %>

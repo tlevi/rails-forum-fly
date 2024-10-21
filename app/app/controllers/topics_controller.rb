@@ -7,12 +7,25 @@ class TopicsController < CrudController
     member:    %i[ new create update edit ],
   }
 
-  before_action :check_topic_edit_permission, only: %i[ edit update ]
-  before_action :set_forum, only: %i[ edit update ]
+  before_action :check_topic_edit_permission, only: %i[ update edit ]
+  before_action :set_forum, only: %i[ update edit ]
 
   def index
     @forum = Forum.find(params.dig(:forum_id))
-    @topics = @forum.topics.merge(Post.with_rich_text_body)
+    @topics = @forum.topics.includes(:author)
+
+    pt = Post.arel_table
+    @topic_first_posts = Post.find_by_sql(
+      pt.project(pt[Arel.star])
+        .where(pt[:forum_id].eq(@forum.id))
+        .distinct_on(pt[:topic_id])
+        .order(pt[:topic_id], pt[:created_at].desc, pt[:id].desc)
+    )
+
+    ActiveRecord::Associations::Preloader.new(records: @topic_first_posts, associations: :author).call
+    @topic_first_posts = @topic_first_posts.group_by(&:topic_id)
+
+    @topic_post_counts = Post.where(forum_id: @forum.id).group(:topic_id).count
   end
 
   def new
@@ -53,9 +66,8 @@ private
     @forum = @topic.forum
   end
 
-  # TODO: Belongs elsewhere so we can use consistently in view etc
   def check_topic_edit_permission
-    raise unless @topic.author.blank? or current_user.id == @topic.author.id or is_moderator?
+    raise unless can_edit?(@topic)
   end
 
   def path_args(clazz)

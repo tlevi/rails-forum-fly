@@ -28,6 +28,14 @@ module ApplicationHelper
     return current_user.role == 'admin'
   end
 
+  def can_edit?(model)
+    if model.author.blank? or current_user.id == model.author.id or is_moderator?
+      true
+    else
+      false
+    end
+  end
+
   def flash_class(level)
     case level
       when 'success' then "alert alert-dismissible fade show alert-server alert-success"

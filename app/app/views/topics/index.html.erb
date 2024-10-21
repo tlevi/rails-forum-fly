@@ -4,16 +4,48 @@
 <%= link_to 'Edit description', edit_forum_path(@forum) if is_admin? %>
 <%= link_to 'Post new topic', new_forum_topic_path(@forum) if is_member? %>
 </p>
+
 <% unless @topics.present? %>
 <p>No topics created yet!</p>
+
 <% else %>
   <% @topics.each do |topic| %>
+  <%
+    latest = @topic_first_posts[topic.id].first
+    replies = @topic_post_counts[topic.id] - 1
+  %>
     <a href="<%= topic_path(topic) %>" class="nav-link card-link" data-turbo="false">
-    <div class="card border-secondary">
-      <div class="card-body text-secondary">
-        <div class="card-title"><%= topic.title %></div>
-        <p class="card-text"><%= topic.first_post.body %></p>
-        <%= link_to 'Edit', edit_topic_path(topic) if is_moderator? %>
+    <div class="row">
+      <div class="card-group border" style="padding: 0; margin-bottom: 5px;">
+        <div class="card">
+          <div class="card-body">
+            <span class="col-12 d-inline-block text-truncate">
+              <%= topic.title %>
+            </span>
+          </div>
+          <div class="card-footer">
+            <small class="text-muted">
+              <%= topic.author.username %>, <%= time_ago_in_words(topic.created_at) %> ago
+            </small>
+          </div>
+          <% if can_edit?(topic) %>
+          <div class="card-footer">
+            <%= link_to 'Edit', edit_topic_path(topic) %>
+          </div>
+          <% end %>
+        </div>
+        <div class="card" style="min-width: 250px; max-width: 250px;">
+          <div class="card-body text-secondary">
+          <%= replies %> replies
+          </div>
+          <% if replies > 0 %>
+          <div class="card-footer">
+          <small class="text-muted">
+            <%= latest.author.username %>, <%= time_ago_in_words(latest.created_at) %> ago
+          </small>
+          </div>
+          <% end %>
+        </div>
       </div>
     </div>
     </a>
