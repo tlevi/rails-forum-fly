@@ -1,8 +1,11 @@
-<h1><%= @forum.title %></h1>
+<h4><%= @forum.title %></h4>
 <p>
 <%= @forum.description %>
-<%= link_to 'Edit description', edit_forum_path(@forum) if is_admin? %>
-<%= link_to 'Post new topic', new_forum_topic_path(@forum) if is_member? %>
+</p>
+
+<p>
+<%= link_to 'Post new topic', new_forum_topic_path(@forum), class: 'btn btn-primary btn-sm' if is_member? %>
+<%= link_to 'Edit description', edit_forum_path(@forum), class: 'btn btn-success btn-sm' if is_admin? %>
 </p>
 
 <% unless @topics.present? %>

@@ -3,7 +3,7 @@
 <p>
 <%= time_ago_in_words(@topic.created_at).capitalize %> ago in <%= @topic.forum.title %>
 </p>
-<br>
+<p>
 <% @topic.posts.each do |post| %>
 <div class="row">
   <div class="card-group border" style="padding: 0; margin-bottom: 5px;">
@@ -45,7 +45,7 @@
   </div>
 </div>
 <% end %>
-<br>
+</p>
 <p>
-<%= link_to 'Add reply', new_topic_post_path(@topic), class: 'btn btn-primary' if is_member? %>
+<%= link_to 'Add reply', new_topic_post_path(@topic), class: 'btn btn-primary btn-sm' if is_member? %>
 </p>
