@@ -12,24 +12,10 @@ module ApplicationHelper
     @current_user ||= User.find_by_id!(1)
   end
 
-  def is_guest?
-    !is_member?
-  end
-
-  def is_member?
-    return current_user.role == 'member' || is_moderator?
-  end
-
-  def is_moderator?
-    return current_user.role == 'moderator' || is_admin?
-  end
-
-  def is_admin?
-    return current_user.role == 'admin'
-  end
+  delegate :is_guest?, :is_member?, :is_moderator?, :is_admin?, to: :current_user
 
   def can_edit?(model)
-    if model.author.blank? or current_user.id == model.author.id or is_moderator?
+    if model.author.blank? or current_user.id == model.author.id or (is_moderator? and model.author.role != 'admin')
       true
     else
       false

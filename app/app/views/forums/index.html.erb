@@ -1,22 +1,24 @@
-<h1>Forum index</h1>
+<h3>Forums</h3>
 
-<% if is_admin? %>
-<p><%= link_to 'Create forum', new_forum_path %></p>
-<% end %>
-<ul>
-<% unless @forums.present? %>
-<p>No forums created yet!</p>
-<% else %>
-  <% @forums.each do |forum| %>
-    <a href="<%= forum_topics_path(forum) %>" class="nav-link card-link" data-turbo="false">
-    <div class="card border-secondary">
-      <div class="card-body text-secondary">
-        <div class="card-title"><%= forum.title %></div>
-        <p class="card-text"><%= forum.description %></p>
-        <%= link_to 'Edit', edit_forum_path(forum) if is_admin? %>
+<p>
+  <%= link_to 'Create forum', new_forum_path, class: 'btn btn-success btn-sm' if is_admin? %>
+</p>
+
+<% @forums.each do |forum| %>
+  <div class="row overlay-box">
+    <%= link_to '', forum_topics_path(forum), class: 'overlay-link', 'data-turbo': 'false' %>
+    <div class="card-group border overlay-content" style="padding: 0; margin-bottom: 5px;">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">
+            <h4><%= forum.title %></h4>
+          </div>
+          <p class="card-text">
+            <%= forum.description %>
+          </p>
+          <%= link_to 'Edit', edit_forum_path(forum) if is_admin? %>
+        </div>
       </div>
     </div>
-    </a>
-  <% end %>
+  </div>
 <% end %>
-</ul>

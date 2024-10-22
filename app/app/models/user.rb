@@ -21,4 +21,20 @@ class User < ApplicationRecord
   enum :role, DB_ROLES.index_by(&:to_sym)
 
   has_secure_password
+
+  def is_member?
+    role == 'member' || is_moderator?
+  end
+
+  def is_moderator?
+    role == 'moderator' || is_admin?
+  end
+
+  def is_admin?
+    role == 'admin'
+  end
+
+  def is_guest?
+    !is_member?
+  end
 end

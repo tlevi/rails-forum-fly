@@ -11,7 +11,7 @@
 <p>No topics created yet!</p>
 <% else %>
   <% @topics.each do |topic| %>
-    <a href="<%= topic_path(topic) %>" class="nav-link card-link" data-turbo="false">
+    <a href="<%= topic_path(topic) %>" class="nav-link" data-turbo="false">
     <div class="card border-secondary">
       <div class="card-body text-secondary">
         <div class="card-title"><%= topic.title %></div>

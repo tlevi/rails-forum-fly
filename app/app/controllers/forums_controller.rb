@@ -1,9 +1,10 @@
 class ForumsController < CrudController
+  before_action :set_breadcrumbs
+
   self.permitted_attrs = [:title, :description]
 
   self.action_access_by_role = {
-    guest:  %i[ index ],
-    member: %i[ show ],
+    guest:  %i[ index show ],
     admin:  %i[ new create edit update ],
   }
 
@@ -33,5 +34,15 @@ private
 
   def check_action_by_role(action, role)
     super
+  end
+
+  def set_breadcrumbs
+    if @forum.present?
+      if @forum.new_record?
+        add_breadcrumb('New forum')
+      else
+        add_breadcrumb(@forum.title, forum_topics_path(@forum))
+      end
+    end
   end
 end

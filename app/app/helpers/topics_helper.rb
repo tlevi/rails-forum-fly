@@ -1,4 +1,6 @@
 module TopicsHelper
+private
+
   def save_topic_path(forum, topic)
     case action_name
       when 'new', 'create'

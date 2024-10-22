@@ -4,45 +4,7 @@ By <%= @topic.author.username %>, <%= time_ago_in_words(@topic.created_at).capit
 </p>
 <p>
 <% @topic.posts.each do |post| %>
-<div class="row">
-  <div class="card-group border" style="padding: 0; margin-bottom: 5px;">
-      <div class="card" style="min-width: 150px; max-width: 150px">
-        <div class="card-body">
-          <h5 class="card-title">
-            <%= post.author.username %>
-          </h5>
-        </div>
-        <div class="card-footer">
-          <small class="text-muted">
-            Joined <%= post.author.created_at.strftime('%b %Y') %>
-          </small>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-body">
-          <%= post.body %>
-        </div>
-        <div class="card-footer" style="border:0">
-          <div class="row">
-            <div class="col">
-              <% if can_edit?(post) %>
-                <%= link_to 'Edit', edit_post_path(post), class: 'btn btn-primary btn-sm' %>
-              <% end %>
-            </div>
-            <div class="col text-end">
-              <small class="text-muted">
-                <% if post.updated_at - post.created_at <= 1 %>
-                  Posted <%= time_ago_in_words(post.created_at) %> ago
-                <% else %>
-                  Edited <%= time_ago_in_words(post.updated_at) %> ago
-                <% end %>
-              </small>
-            </div>
-          </div>
-        </div>
-      </div>
-  </div>
-</div>
+  <%= render partial: "post", locals: {post: post} %>
 <% end %>
 </p>
 <p>

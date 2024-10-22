@@ -1,0 +1,36 @@
+  <div class="row overlay-box">
+    <%= link_to '', topic_path(topic), class: 'overlay-link', 'data-turbo': 'false' %>
+    <div class="card-group overlay-content border" style="padding: 0; margin-bottom: 5px;">
+      <div class="card">
+        <div class="card-body">
+          <span class="col-12 d-inline-block text-truncate">
+            <%= topic.title %>
+          </span>
+        </div>
+        <div class="card-footer">
+          <div class="row">
+            <div class="col-auto">
+              <small class="text-muted d-inline-block">
+                <%= topic.author.username %>, <%= time_ago_in_words(topic.created_at) %> ago
+              </small>
+            </div>
+            <div class="col text-end d-inline-block">
+              <%= link_to 'Edit', edit_topic_path(topic), class: 'btn btn-success btn-sm' if can_edit?(topic) %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card text-end" style="min-width: 250px; max-width: 250px;">
+        <div class="card-body text-secondary">
+          <%= reply_count %> replies
+        </div>
+        <% if reply_count > 0 %>
+          <div class="card-footer">
+            <small class="text-muted">
+              <%= last_post.author.username %>, <%= time_ago_in_words(last_post.created_at) %> ago
+            </small>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>

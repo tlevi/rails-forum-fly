@@ -19,15 +19,18 @@ class Topic < ApplicationRecord
 
   belongs_to :forum
   belongs_to :author, class_name: "User", foreign_key: "user_id"
-  belongs_to :first_post, class_name: "Post", foreign_key: "post_id"
+  belongs_to :first_post, class_name: "Post", foreign_key: "post_id", inverse_of: :topic
 
   delegate :body, to: :first_post
 
-#  has_many :posts, -> { order(:id) }, :dependent => :destroy
-  has_many :posts, -> { order(created_at: :asc) }, :dependent => :destroy
+  has_many :posts, -> { order(created_at: :asc).with_all_rich_text }, :dependent => :destroy
 	
   before_commit :set_first_post_topic_id
   accepts_nested_attributes_for :first_post
+
+  def latest_post
+    posts.reorder(created_at: :desc).first
+  end
 
 private
 

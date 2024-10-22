@@ -9,48 +9,14 @@
 </p>
 
 <% unless @topics.present? %>
-<p>No topics created yet!</p>
+  <p>No topics created yet!</p>
 
 <% else %>
   <% @topics.each do |topic| %>
-  <%
-    latest = @topic_first_posts[topic.id].first
-    replies = @topic_post_counts[topic.id] - 1
-  %>
-    <a href="<%= topic_path(topic) %>" class="nav-link card-link" data-turbo="false">
-    <div class="row">
-      <div class="card-group border" style="padding: 0; margin-bottom: 5px;">
-        <div class="card">
-          <div class="card-body">
-            <span class="col-12 d-inline-block text-truncate">
-              <%= topic.title %>
-            </span>
-          </div>
-          <div class="card-footer">
-            <small class="text-muted">
-              <%= topic.author.username %>, <%= time_ago_in_words(topic.created_at) %> ago
-            </small>
-          </div>
-          <% if can_edit?(topic) %>
-          <div class="card-footer">
-            <%= link_to 'Edit', edit_topic_path(topic) %>
-          </div>
-          <% end %>
-        </div>
-        <div class="card" style="min-width: 250px; max-width: 250px;">
-          <div class="card-body text-secondary">
-          <%= replies %> replies
-          </div>
-          <% if replies > 0 %>
-          <div class="card-footer">
-          <small class="text-muted">
-            <%= latest.author.username %>, <%= time_ago_in_words(latest.created_at) %> ago
-          </small>
-          </div>
-          <% end %>
-        </div>
-      </div>
-    </div>
-    </a>
+    <%
+      latest = @topic_first_posts[topic.id].first
+      replies = @topic_post_counts[topic.id] - 1
+    %>
+    <%= render partial: 'topic', locals: {topic: topic, reply_count: replies, last_post: latest} %>
   <% end %>
 <% end %>

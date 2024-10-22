@@ -6,8 +6,7 @@ class PostsController < CrudController
     member: %i[ new create update edit ],
   }
 
-  before_action :check_post_edit_permission, only: %i[ update edit ]
-  before_action :set_topic, only: %i[ update edit ]
+  before_action :set_breadcrumbs
 
   def new
     @post.topic = @topic
@@ -28,20 +27,38 @@ class PostsController < CrudController
 
   def update
     @post.body = post_params[:body]
+    @post.editor = current_user
     @post.touch
     @post.save!
     redirect_to topic_path(@post.topic)
   end
 
-private
-
-  def set_topic
-    @topic = @post.topic
-    @forum = @topic.forum
+  def edit
+    super
   end
 
-  def check_post_edit_permission
-    raise unless can_edit?(@post)
+private
+
+  def topic
+    if @post.present?
+      @topic ||= @post.topic
+    else
+      @topic ||= Topic.find(params.dig(:topic_id))
+    end
+  end
+
+  def set_breadcrumbs
+    forum = topic.forum
+    add_breadcrumb(forum.title, forum_path(forum))
+    add_breadcrumb(topic.title, topic_path(topic))
+
+    if @post.present?
+      if @post.new_record?
+        add_breadcrumb('New reply')
+      else
+        add_breadcrumb("#{action_name.capitalize} post")
+      end
+    end
   end
 
   def path_args(clazz)

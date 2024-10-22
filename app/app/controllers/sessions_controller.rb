@@ -20,6 +20,10 @@ class SessionsController < ApplicationController
 
   private
 
+  def check_edit_permission
+    true
+  end
+
   def check_action_by_role(action, role)
     true
   end

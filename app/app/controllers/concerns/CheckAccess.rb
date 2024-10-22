@@ -2,7 +2,8 @@ module CheckAccess
   extend ActiveSupport::Concern
 
   included do
-    before_action   :check_access
+    before_action :check_access
+    before_action :check_edit_permission
     class_attribute :action_access_by_role, default: {}
   end
 
@@ -26,5 +27,11 @@ module CheckAccess
     def render_no_access
       render :file => 'public/403.html', :status => :forbidden, layout: false unless performed?
       false
+    end
+
+    def check_edit_permission
+      return unless self.respond_to?(:entry)
+      return unless action_name.in?(%w(new create update edit))
+      raise unless can_edit?(entry)
     end
 end

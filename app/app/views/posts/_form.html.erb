@@ -1,12 +1,18 @@
-<p>
-<% if action_name == 'new' %>
-Posting new reply in topic <%= @topic.title %>
-<% else %>
-Updating post in topic <%= @topic.title %>
-<% end %>
-</p>
-
+<h4><%= action_name.capitalize %> post</h4>
 <%= bootstrap_form_for(@post, url: save_post_path(@topic, @post)) do |f| %>
   <%= f.rich_text_area(:body) %>
-  <%= f.primary friendly_action_name %>
+  <%= f.primary friendly_action_name, class: 'btn btn-primary btn-sm' %>
 <% end %>
+<br>
+
+<% if action_name == 'new' %>
+<p>
+<h5>Latest reply</h5>
+<%= render partial: "post", locals: {post: @post.topic.latest_post, with_buttons: false} %>
+</p>
+<% end %>
+
+<p>
+<h5>Original topic</h5>
+<%= render partial: "post", locals: {post: @post.topic.posts.first, with_buttons: false} %>
+</p>

@@ -7,25 +7,23 @@ class TopicsController < CrudController
     member:    %i[ new create update edit ],
   }
 
-  before_action :check_topic_edit_permission, only: %i[ update edit ]
-  before_action :set_forum, only: %i[ update edit ]
+  before_action :set_breadcrumbs
 
   def index
-    @forum = Forum.find(params.dig(:forum_id))
-    @topics = @forum.topics.includes(:author)
+    @topics = forum.topics.includes(:author)
 
     pt = Post.arel_table
     @topic_first_posts = Post.find_by_sql(
       pt.project(pt[Arel.star])
-        .where(pt[:forum_id].eq(@forum.id))
+        .where(pt[:forum_id].eq(forum.id))
         .distinct_on(pt[:topic_id])
         .order(pt[:topic_id], pt[:created_at].desc, pt[:id].desc)
     )
 
-    ActiveRecord::Associations::Preloader.new(records: @topic_first_posts, associations: :author).call
-    @topic_first_posts = @topic_first_posts.group_by(&:topic_id)
+    ActiveRecord::Associations::Preloader.new(records: @topic_first_posts, associations: [:author, :editor]).call
 
-    @topic_post_counts = Post.where(forum_id: @forum.id).group(:topic_id).count
+    @topic_first_posts = @topic_first_posts.group_by(&:topic_id)
+    @topic_post_counts = Post.where(forum_id: forum.id).group(:topic_id).count
   end
 
   def new
@@ -35,16 +33,14 @@ class TopicsController < CrudController
 
   def create
     ActiveRecord::Base.transaction do
-      @forum = Forum.find(params.dig(:forum_id))
-
       @post = Post.create({
         body:   post_params[:body],
-        forum:  @forum,
+        forum:  forum,
         author: current_user,
       })
 
       @topic = Topic.create(topic_params.merge({
-        forum:      @forum,
+        forum:      forum,
         author:     current_user,
         first_post: @post,
       }))
@@ -60,14 +56,30 @@ class TopicsController < CrudController
     redirect_to topic_path(@topic)
   end
 
-private
-
-  def set_forum
-    @forum = @topic.forum
+  def show
+    ActiveRecord::Associations::Preloader.new(records: [entry], associations: {posts: :author}).call
   end
 
-  def check_topic_edit_permission
-    raise unless can_edit?(@topic)
+private
+
+  def set_breadcrumbs
+    add_breadcrumb(forum.title, forum_path(forum))
+
+    if @topic.present?
+      if @topic.new_record?
+        add_breadcrumb('Post new topic')
+      else
+        add_breadcrumb(@topic.title, topic_path(@topic))
+      end
+    end
+  end
+
+  def forum
+    if @topic.present?
+      @forum ||= @topic.forum
+    else
+      @forum ||= Forum.find(params.dig(:forum_id))
+    end
   end
 
   def path_args(clazz)

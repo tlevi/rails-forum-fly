@@ -1,4 +1,6 @@
 module PostsHelper
+private
+
   def save_post_path(topic, post)
     case action_name
       when 'new', 'create'

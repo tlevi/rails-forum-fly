@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "RailsForum" %></title>
+    <title>
+      <%= breadcrumbs.map(&:name).reverse.append("RailsForum").join(' - ') %>
+    </title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
@@ -29,7 +31,7 @@
   </div>
 
   <nav class="navbar navbar-expand-sm bg-light">
-    <div class="container-fluid">
+    <div class="container">
       <a class="navbar-brand" href="/">
         <h3>RailsForum</h3>
       </a>
@@ -39,16 +41,16 @@
       <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Member</a>
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="#">Courses</a>
+            <a class="nav-link active" href="#">Fresh</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Blog</a>
+            <a class="nav-link active" aria-current="page" href="#">Top</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Event</a>
+            <a class="nav-link active" aria-current="page" href="#">Visited</a>
           </li>
         </ul>
         <form class="">
@@ -64,40 +66,30 @@
     </div>
   </nav>
 
-  <!-- sidebar + content -->
-  <div class="container-fluid">
-  <div class="row">
-
-    <div class="sidebar">
-    <nav class="nav nav-sidebar">
-      <ul class="list-unstyled">
-        <li class="mb-1">
-          <li><a class="nav-link" href="/">Home</a></li>
-          <li><a class="nav-link" href="/topics/recent">Fresh meat</a></li>
-          <li><a class="nav-link" href="/topics/top">Top picks</a></li>
-        </li>
-        <li class="mb-1">
-          <button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#recent-collapse" aria-expanded="true" aria-controls="recent-collapse">
-            Recently Visited
-          </button>
-          <div class="collapse show" id="recent-collapse">
-          <ul class="btn-toggle-nav list-unstyled small">
-            <li>Recent1</li>
-            <li>Recent2</li>
-            <li>Recent3</li>
-          </ul>
-          </div>
-        </li>
-      </ul>
+  <div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <% breadcrumbs.each do |crumb| %>
+          <li class="breadcrumb-item" <%= 'aria-current="page"' if crumb == breadcrumbs.last %>>
+            <% if crumb.link? %>
+              <%= link_to crumb.name, crumb.path, class: "breadcrumb-link" %>
+            <% else %>
+              <span class="breadcrumb-page">
+                <%= crumb.name %>
+              </span>
+            <% end %>
+          </li>
+        <% end %>
+      </ol>
     </nav>
-    </div>
+  </div>
 
-    <!-- main content body -->
-    <div class="col-xs-12 main">
-      <%= yield %>
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12 main">
+        <%= yield %>
+      </div>
     </div>
-
-  </div><!-- row -->
-  </div><!-- container -->
+  </div>
   </body>
 </html>
