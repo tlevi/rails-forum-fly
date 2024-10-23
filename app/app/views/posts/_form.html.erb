@@ -2,6 +2,7 @@
 <%= bootstrap_form_for(@post, url: save_post_path(@topic, @post)) do |f| %>
   <%= f.rich_text_area(:body) %>
   <%= f.primary friendly_action_name, class: 'btn btn-primary btn-sm' %>
+  <%= link_to 'Return to topic', topic_path(@topic), class: 'btn btn-secondary btn-sm' %>
 <% end %>
 <br>
 

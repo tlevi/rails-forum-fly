@@ -14,9 +14,8 @@
 <% else %>
   <% @topics.each do |topic| %>
     <%
-      latest = @topic_first_posts[topic.id].first
-      replies = @topic_post_counts[topic.id] - 1
+      latest = @topic_last_posts[topic.id].first
     %>
-    <%= render partial: 'topic', locals: {topic: topic, reply_count: replies, last_post: latest} %>
+    <%= render partial: 'topic', locals: {topic: topic, last_post: latest} %>
   <% end %>
 <% end %>

@@ -27,8 +27,8 @@ class Post < ApplicationRecord
   #validates :moderated, presence: true
 
   belongs_to :author, class_name: "User", foreign_key: "user_id"
-  belongs_to :editor, class_name: "User", foreign_key: "editor_id"
-  belongs_to :topic, inverse_of: :first_post, optional: true, autosave: true, touch: true
+  belongs_to :editor, class_name: "User", foreign_key: "editor_id", optional: true
+  belongs_to :topic, inverse_of: :posts, optional: true, autosave: true, touch: true, counter_cache: :reply_count
   belongs_to :forum
 
   def is_first?

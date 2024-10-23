@@ -1,0 +1,10 @@
+	<h3><%= params.dig(:pick).capitalize %> topics</h3>
+<p>
+</p>
+
+<% @topics.each do |topic| %>
+  <%
+    latest = @topic_last_posts[topic.id].first
+  %>
+  <%= render partial: 'topic', locals: {topic: topic, last_post: latest, show_forum: true} %>
+<% end %>

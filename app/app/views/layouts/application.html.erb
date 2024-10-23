@@ -23,7 +23,7 @@
 
   <div id="floating-alert-box" class="container-fluid">
   <% flash.each do |level, message| %>
-    <%= content_tag :div, class: flash_class(level) do %>
+    <%= content_tag :div, class: flash_classes(level) do %>
       <%= message %>
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" />
     <% end -%>
@@ -41,16 +41,16 @@
       <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <a class="nav-link active" href="/">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="#">Fresh</a>
+            <a class="nav-link active" href="/topics/list/fresh">Fresh</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Top</a>
+            <a class="nav-link active" href="/topics/list/active">Active</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Visited</a>
+            <a class="nav-link active" href="/topics/list/popular">Popular</a>
           </li>
         </ul>
         <form class="">

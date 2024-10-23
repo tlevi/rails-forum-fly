@@ -19,7 +19,7 @@ class Topic < ApplicationRecord
 
   belongs_to :forum
   belongs_to :author, class_name: "User", foreign_key: "user_id"
-  belongs_to :first_post, class_name: "Post", foreign_key: "post_id", inverse_of: :topic
+  belongs_to :first_post, class_name: "Post", foreign_key: "post_id"
 
   delegate :body, to: :first_post
 

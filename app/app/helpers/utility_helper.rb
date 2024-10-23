@@ -18,15 +18,6 @@ module UtilityHelper
     super(block_given? ? array.map(&block).compact : array, sep)
   end
 
-  # Returns the css class for the given flash level.
-  def flash_class(level)
-    case level
-    when :notice then 'success'
-    when :alert then 'error'
-    else level.to_s
-    end
-  end
-
   # Adds a class to the given options, even if there are already classes.
   def add_css_class(options, classes)
     if options[:class]

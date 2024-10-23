@@ -22,13 +22,14 @@ module ApplicationHelper
     end
   end
 
-  def flash_class(level)
+  def flash_classes(level)
     case level
-      when 'success' then "alert alert-dismissible fade show alert-server alert-success"
-      when 'notice'  then "alert alert-dismissible fade show alert-server alert-info"
-      when 'info'    then "alert alert-dismissible fade show alert-server alert-info"
-      when 'alert'   then "alert alert-dismissible fade show alert-server alert-warning"
-      when 'error'   then "alert alert-dismissible fade show alert-server alert-danger"
+      when 'success' then 'alert alert-dismissible fade show alert-server alert-success'
+      when 'notice'  then 'alert alert-dismissible fade show alert-server alert-info'
+      when 'info'    then 'alert alert-dismissible fade show alert-server alert-info'
+      when 'alert'   then 'alert alert-dismissible fade show alert-server alert-warning'
+      when 'warning' then 'alert alert-dismissible fade show alert-server alert-warning'
+      when 'error'   then 'alert alert-dismissible fade show alert-server alert-danger'
       else 'alert alert-dismissible fade show alert-server alert-info'
     end
   end

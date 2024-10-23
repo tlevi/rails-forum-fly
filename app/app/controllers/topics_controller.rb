@@ -3,27 +3,56 @@ class TopicsController < CrudController
 
   # TODO: Updates need to be limited further for members in the actual method
   self.action_access_by_role = {
-    guest:     %i[ index show ],
+    guest:     %i[ index show list ],
     member:    %i[ new create update edit ],
   }
 
-  before_action :set_breadcrumbs
+  before_action :set_breadcrumbs, except: :list
 
   def index
     @topics = forum.topics.includes(:author)
 
+    # Arbitrary limit in lieu of paging.
+    @topics = @topics.limit(20)
+
     pt = Post.arel_table
-    @topic_first_posts = Post.find_by_sql(
+    @topic_last_posts = Post.find_by_sql(
       pt.project(pt[Arel.star])
         .where(pt[:forum_id].eq(forum.id))
         .distinct_on(pt[:topic_id])
         .order(pt[:topic_id], pt[:created_at].desc, pt[:id].desc)
     )
 
-    ActiveRecord::Associations::Preloader.new(records: @topic_first_posts, associations: [:author, :editor]).call
+    ActiveRecord::Associations::Preloader.new(records: @topic_last_posts, associations: [:author, :editor]).call
 
-    @topic_first_posts = @topic_first_posts.group_by(&:topic_id)
-    @topic_post_counts = Post.where(forum_id: forum.id).group(:topic_id).count
+    @topic_last_posts = @topic_last_posts.group_by(&:topic_id)
+  end
+
+  def list
+    pick = params.dig(:pick)
+    add_breadcrumb("#{pick.capitalize} topics", "/topics/list/#{pick}")
+
+    @topics = case pick
+      when 'fresh' then Topic.order(created_at: :desc)
+      when 'active' then Topic.order(reply_count: :desc)
+      when 'popular' then Topic.order(view_count: :desc)
+      else throw :abort
+    end
+
+    # Arbitrary limit in lieu of paging.
+    @topics = @topics.limit(20)
+
+    pt = Post.arel_table
+    @topic_last_posts = Post.find_by_sql(
+      pt.project(pt[Arel.star])
+        .where(pt[:forum_id].in(@topics.pick(:forum_id)))
+        .distinct_on(pt[:topic_id])
+        .order(pt[:topic_id], pt[:created_at].desc, pt[:id].desc)
+    )
+
+    ActiveRecord::Associations::Preloader.new(records: @topic_last_posts, associations: [:forum, :author, :editor]).call
+
+    @topic_last_posts = @topic_last_posts.group_by(&:topic_id)
   end
 
   def new
@@ -57,6 +86,9 @@ class TopicsController < CrudController
   end
 
   def show
+    if Time.now.to_i - session.dig(:posted_at).to_i > 30
+      Topic.increment_counter(:view_count, entry.id)
+    end
     ActiveRecord::Associations::Preloader.new(records: [entry], associations: {posts: :author}).call
   end
 

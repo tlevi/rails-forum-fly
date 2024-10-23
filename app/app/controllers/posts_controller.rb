@@ -21,7 +21,22 @@ class PostsController < CrudController
         forum_id:  @topic.forum.id,
         author: current_user,
       })
+      if @topic.id == session.dig(:posted_to) && Time.now.to_i - session.dig(:posted_new).to_i < 60
+        flash[:warning] = 'Please wait at least 1 minute before posting in the same topic!'
+        render :new, status: :unprocessable_entity
+        return
+      end
+      @topic.touch
+      @post.save!
+    rescue
+      flash[:error] = 'Post details are invalid!'
+      render :new, status: :unprocessable_entity
+      return
     end
+
+    session[:posted_to]  = @post.topic.id
+    session[:posted_at]  = Time.now.to_i
+    session[:posted_new] = Time.now.to_i
     redirect_to topic_path(@topic)
   end
 
@@ -30,6 +45,8 @@ class PostsController < CrudController
     @post.editor = current_user
     @post.touch
     @post.save!
+    session[:posted_to] = @post.topic.id
+    session[:posted_at] = Time.now.to_i
     redirect_to topic_path(@post.topic)
   end
 

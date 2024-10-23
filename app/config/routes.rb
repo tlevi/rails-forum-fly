@@ -16,6 +16,8 @@ Rails.application.routes.draw do
     resources :topics
   end
 
+  get '/topics/list/:pick', to: "topics#list"
+
   resources :topics, shallow: true do
     resources :posts
   end

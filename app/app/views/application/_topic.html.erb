@@ -11,7 +11,7 @@
           <div class="row">
             <div class="col-auto">
               <small class="text-muted d-inline-block">
-                <%= topic.author.username %>, <%= time_ago_in_words(topic.created_at) %> ago
+                Started by <%= topic.author.username %>, <%= time_ago_in_words(topic.created_at) %> ago
               </small>
             </div>
             <div class="col text-end d-inline-block">
@@ -22,12 +22,13 @@
       </div>
       <div class="card text-end" style="min-width: 250px; max-width: 250px;">
         <div class="card-body text-secondary">
-          <%= reply_count %> replies
+          <%= topic.reply_count %> replies<br>
+          <%= topic.view_count %> views
         </div>
-        <% if reply_count > 0 %>
+        <% if topic.reply_count > 0 %>
           <div class="card-footer">
             <small class="text-muted">
-              <%= last_post.author.username %>, <%= time_ago_in_words(last_post.created_at) %> ago
+              <%= last_post.author.username %> replied <%= time_ago_in_words(last_post.created_at) %> ago
             </small>
           </div>
         <% end %>
