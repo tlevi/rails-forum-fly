@@ -10,49 +10,24 @@ class TopicsController < CrudController
   before_action :set_breadcrumbs, except: :list
 
   def index
-    @topics = forum.topics.includes(:author)
-
+    @topics = forum.topics.includes(:author, :forum)
     # Arbitrary limit in lieu of paging.
     @topics = @topics.limit(20)
-
-    pt = Post.arel_table
-    @topic_last_posts = Post.find_by_sql(
-      pt.project(pt[Arel.star])
-        .where(pt[:forum_id].eq(forum.id))
-        .distinct_on(pt[:topic_id])
-        .order(pt[:topic_id], pt[:created_at].desc, pt[:id].desc)
-    )
-
-    ActiveRecord::Associations::Preloader.new(records: @topic_last_posts, associations: [:author, :editor]).call
-
-    @topic_last_posts = @topic_last_posts.group_by(&:topic_id)
+    setup_topic_list(@topics)
   end
 
   def list
     pick = params.dig(:pick)
     add_breadcrumb("#{pick.capitalize} topics", "/topics/list/#{pick}")
-
     @topics = case pick
       when 'fresh' then Topic.order(created_at: :desc)
       when 'active' then Topic.order(reply_count: :desc)
       when 'popular' then Topic.order(view_count: :desc)
       else throw :abort
     end
-
     # Arbitrary limit in lieu of paging.
-    @topics = @topics.limit(20)
-
-    pt = Post.arel_table
-    @topic_last_posts = Post.find_by_sql(
-      pt.project(pt[Arel.star])
-        .where(pt[:forum_id].in(@topics.pick(:forum_id)))
-        .distinct_on(pt[:topic_id])
-        .order(pt[:topic_id], pt[:created_at].desc, pt[:id].desc)
-    )
-
-    ActiveRecord::Associations::Preloader.new(records: @topic_last_posts, associations: [:forum, :author, :editor]).call
-
-    @topic_last_posts = @topic_last_posts.group_by(&:topic_id)
+    @topics = @topics.includes(:author, :forum).limit(20)
+    setup_topic_list(@topics)
   end
 
   def new
@@ -94,6 +69,20 @@ class TopicsController < CrudController
 
 private
 
+  def setup_topic_list(topic_scope)
+    pt = Post.arel_table
+    @topic_last_posts = Post.find_by_sql(
+      pt.project(pt[Arel.star])
+        .where(pt[:forum_id].in(topic_scope.load.pluck(:forum_id)))
+        .distinct_on(pt[:topic_id])
+        .order(pt[:topic_id], pt[:created_at].desc, pt[:id].desc)
+    )
+
+    ActiveRecord::Associations::Preloader.new(records: @topic_last_posts, associations: [:author, :editor]).call
+
+    @topic_last_posts = @topic_last_posts.group_by(&:topic_id)
+  end
+
   def set_breadcrumbs
     add_breadcrumb(forum.title, forum_path(forum))
 
@@ -110,7 +99,7 @@ private
     if @topic.present?
       @forum ||= @topic.forum
     else
-      @forum ||= Forum.find(params.dig(:forum_id))
+      @forum ||= Forum.with_all_rich_text.find(params.dig(:forum_id))
     end
   end
 
