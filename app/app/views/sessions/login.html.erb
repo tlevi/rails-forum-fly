@@ -1,20 +1,22 @@
 <h3>Log In</h3>
 
-<div>
-<%= form_tag '/login' do %>
-  Username: <%= text_field_tag :username %><br>
-  Password: <%= password_field_tag :password %><br>
-  <%= submit_tag "Log In" %>
+<p>
+<%= bootstrap_form_tag url: login_path do |f| %>
+  <%= f.text_field :username %>
+  <%= f.password_field :password %>
+  <%= f.primary 'Log in' %>
 <% end %>
-</div>
+</p>
 
+<p>
 <div class="alert alert-info">
 <h4 class="alert-heading">Hint!</h4>
 <!-- TODO: Move this into some kind of 'about' page with more explanation -->
-<p>Some top secret credentials for testing:</p>
+<p>Some TOP SECRET credentials for testing:</p>
 <ul>
 <li>admin / admin</li>
 <li>member / member</li>
 <li>moderator / moderator</li>
 <ul>
 <div>
+</p>

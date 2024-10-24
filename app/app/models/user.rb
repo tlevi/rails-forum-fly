@@ -20,6 +20,7 @@ class User < ApplicationRecord
   DB_ROLES = %w[guest member moderator admin]
   enum :role, DB_ROLES.index_by(&:to_sym)
 
+  validates :password_confirmation, presence: true, on: :create
   has_secure_password
 
   def is_member?

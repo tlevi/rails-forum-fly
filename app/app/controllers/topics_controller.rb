@@ -10,7 +10,7 @@ class TopicsController < CrudController
   before_action :set_breadcrumbs, except: :list
 
   def index
-    @topics = forum.topics.includes(:author, :forum)
+    @topics = forum.topics
     # Arbitrary limit in lieu of paging.
     @topics = @topics.limit(20)
     setup_topic_list(@topics)
@@ -26,7 +26,7 @@ class TopicsController < CrudController
       else throw :abort
     end
     # Arbitrary limit in lieu of paging.
-    @topics = @topics.includes(:author, :forum).limit(20)
+    @topics = @topics.limit(20)
     setup_topic_list(@topics)
   end
 
@@ -78,6 +78,7 @@ private
         .order(pt[:topic_id], pt[:created_at].desc, pt[:id].desc)
     )
 
+    ActiveRecord::Associations::Preloader.new(records: topic_scope, associations: [:author, :forum]).call
     ActiveRecord::Associations::Preloader.new(records: @topic_last_posts, associations: [:author, :editor]).call
 
     @topic_last_posts = @topic_last_posts.group_by(&:topic_id)

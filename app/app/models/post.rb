@@ -32,6 +32,6 @@ class Post < ApplicationRecord
   belongs_to :forum
 
   def is_first?
-    topic.first_post.id == self.id
+    topic.post_id == self.id
   end
 end

@@ -1,28 +1,11 @@
-<%= form_with model: user do |f| %>
-  <div>
-  <%= f.label :username %>
-  <%= f.text_field :username %><br>
-  <% user.errors.full_messages_for(:username).each do |message| %>
-  <div><%= message %></div>
+<%= bootstrap_form_for(@user) do |f| %>
+  <%= f.text_field :username, help: 'Name other users will see you by' %>
+  <%= f.text_field :preferredname, label: "Preferred name", help: 'How we will greet you in emails' %>
+  <%= f.email_field :email %>
+  <%= f.password_field :password %>
+  <%= f.password_field :password_confirmation, label: "Confirm password", help: 'Make sure passwords match!' %>
+  <%= f.primary friendly_action_name %>
+  <% @user.errors.full_messages.each do |message| %>
+    <div><%= message %></div>
   <% end %>
-  </div>
-
-  <div>
-  <%= f.label :password %>
-  <%= f.password_field :password %><br>
-  <% user.errors.full_messages_for(:password).each do |message| %>
-  <div><%= message %></div>
-  <% end %>
-  </div>
-  <div>
-  <%= f.label :password_confirm %>
-  <%= f.password_field :password_confirm %><br>
-  <% user.errors.full_messages_for(:password_confirm).each do |message| %>
-  <div><%= message %></div>
-  <% end %>
-  </div>
-
-  <div>
-  <%= f.submit (action_name == 'new' ? 'Create account' : 'Save changes') %>
-  </div>
 <% end %>

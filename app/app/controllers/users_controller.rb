@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  include UsersHelper
+
   self.action_access_by_role = {
     guest:     %i[ create new ],
     member:    %i[ show edit update ],
@@ -6,25 +8,33 @@ class UsersController < ApplicationController
   }
 
   def new
+    add_breadcrumb 'Create account'
     @user = User.new
   end
 
   def create
-    if User.where(username: user_params[:username]).or(User.where(email: user_params[:email])).exists?
-      flash[:error] = 'Username or email is already taken!'
-      render :new
-    end
-    @user = User.new(user_params)
-    @user.role = 'member'
     if params[:password_confirm] != params[:password]
       flash[:error] = 'Passwords do not match!'
-      render :new
+      render :new, status: :unprocessable_entity
+      return
     end
-    if @user.save
-      session[:user_id] = @user.id
-      redirect_to root_path
-    else
-      render :new
+
+    ActiveRecord::Base.transaction do
+      @user = User.create(user_params.slice(:username, :preferredname, :password, :password_confirmation, :email))
+      @user.role = 'member'
+      if @user.save
+        @user.reload
+        if try_login_user(@user, user_params[:password])
+          flash[:success] = 'Account created, welcome!'
+          redirect_to root_path
+        else
+          flash[:error] = 'Error logging in new account'
+          redirect_to login_path
+        end
+      else
+        flash[:error] = 'Error creatng user record'
+        render :new, status: :unprocessable_entity
+      end
     end
   end
 
@@ -34,7 +44,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    id = params.dig(:id)
+    id = params.dig(:id).to_i
     raise unless is_admin? or current_user.id == id
 
     @user = current_user
@@ -63,6 +73,6 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:id, :username, :password, :email, :role)
+    params.require(:user).permit(:id, :username, :password, :password_confirmation, :preferredname, :email, :role)
   end
 end

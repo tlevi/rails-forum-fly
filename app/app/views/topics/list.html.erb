@@ -1,10 +1,12 @@
-	<h3><%= params.dig(:pick).capitalize %> topics</h3>
+<h3><%= params.dig(:pick).capitalize %> topics</h3>
 <p>
 </p>
 
+<% cache({role: current_user.role, topics: @topics.pluck(:id)}, expires_in: 1.minute) do %>
 <% @topics.each do |topic| %>
   <%
     latest = @topic_last_posts[topic.id].first
   %>
   <%= render partial: 'topic', locals: {topic: topic, last_post: latest, show_forum: true} %>
+<% end %>
 <% end %>

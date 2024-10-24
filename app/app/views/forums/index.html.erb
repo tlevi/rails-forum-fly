@@ -1,10 +1,11 @@
+<% cache_unless is_admin?, {role: current_user.role}, expires_in: 5.minutes do %>
 <h3>Forums</h3>
 
 <p>
   <%= link_to 'Create forum', new_forum_path, class: 'btn btn-success btn-sm' if is_admin? %>
 </p>
 
-<% @forums.each do |forum| %>
+<% @forums.with_rich_text_description.each do |forum| %>
   <div class="row overlay-box">
     <%= link_to '', forum_topics_path(forum), class: 'overlay-link', 'data-turbo': 'false' %>
     <div class="card-group border overlay-content" style="padding: 0; margin-bottom: 5px;">
@@ -21,4 +22,5 @@
       </div>
     </div>
   </div>
+<% end %>
 <% end %>
