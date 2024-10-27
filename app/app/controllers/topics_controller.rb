@@ -49,7 +49,7 @@ class TopicsController < CrudController
         first_post: @post,
       }))
     end
-   redirect_to topic_path(@topic)
+    redirect_to topic_path(@topic)
   end
 
   def update
