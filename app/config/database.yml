@@ -85,3 +85,5 @@ production:
   database: app_production
   username: app
   password: <%= ENV["APP_DATABASE_PASSWORD"] %>
+  checkout_timeout: 45
+  connect_timeout: 60
